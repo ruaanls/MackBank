@@ -18,11 +18,26 @@ Lista Cliente - Índices
 aaaa
 '''
 def menu():
+    
     opcao = 0
-    opcaoSair = 0
+    opcaoSair = None
     cadastrado = False
     voltarMenu = True
+    bloqueado = False
     lista = []
+    def sair():
+        opcaoSair = int(input("DESEJA VOLTAR AO MENU? \n 1 - VOLTAR AO MENU \n 2 - Sair \n"))
+        if opcaoSair == 1:
+            voltarMenu = True
+            
+        elif opcaoSair == 2:
+            voltarMenu = False
+            
+        else:
+            print("VALOR INVÁLIDO, VOLTANDO AO MENU")
+            voltarMenu = True
+        return voltarMenu
+    
     while cadastrado == False:
         print("MACK BANK - ESCOLHA UMA OPÇÃO")
         print("(1) - CADASTRAR CONTA CORRENTE")
@@ -31,10 +46,12 @@ def menu():
         if opcao == 1:
             lista, cadastrado = cadastro()
         else:
-            print("CRIE SUA CONTA PARA LIBERAR AS OUTRAS OPÇÕES")
-    while voltarMenu == True:
+            print("CRIE SUA CONTA PARA LIBERAR AS OUTRAS OPÇÕES ")
+
+            
+    while voltarMenu == True or bloqueado == False:
     
-        print(f"Seja Bem-Vindo, {[lista[1:2]]}")
+        print(f"Seja Bem-Vindo, {lista[1]}")
         print("(2) - DEPOSITAR ")
         print("(3) - SACAR ")
         print("(4) - CONSULTAR SALDO ")
@@ -44,15 +61,13 @@ def menu():
         opcao = int(input("ESCOLHA SUA OPÇÃO: "))
         if opcao == 2:
             deposito(lista)
-            print(lista)
-            print(lista[4])
-            opcaoSair = int(input("DESEJA VOLTAR AO MENU? \n 1 - VOLTAR AO MENU \n 2 - Sair"))
-            if opcaoSair == 2:
-                voltarMenu = False
-                return None
-            elif opcaoSair != 1:
-                print("VALOR INVÁLIDO, VOLTANDO AO MENU")
-
+            voltarMenu = sair()
+        elif opcao == 3:
+            lista, bloqueado = saque(lista)
+            voltarMenu = sair()
+        elif opcao == 4:
+            lista, bloqueado = saldo(lista)
+            voltarMenu = sair()
 
         elif opcao == 7:
             return None
@@ -152,11 +167,71 @@ def deposito(lista):
     print("DEPOSITO REALIZADO COM SUCESSO")
     return lista
 
+def saque(lista):
+    print("MACK BANK - SAQUE DA CONTA")
+    numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
+    while numConta != lista[0]:
+        print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O CADASTRADO")
+        numConta = int(input("DIGITE NOVAMENTE O NÚMERO DA CONTA: "))
+    
+    print(f"NOME DO CLIENTE: {lista[1]}")
+    senha = input("INFORME SUA SENHA: ")
+    bloqueado = None
+    cont = 3
+    while senha != lista[6]:
+        print(f"SENHA ERRADA, VOCÊ AINDA TEM {cont} TENTATIVAS ANTES DO BLOQUEIO")
+        senha = input("INFORME SUA SENHA: ")
+        cont-=1
+        if cont == 0:
+            print("SUA CONTA ESTÁ BLOQUEADA POR ERRO DE SENHA \n ENTRE EM CONTATO CONOSCO PARA O DESBLOQUEIO")
+            bloqueado = True
+            return lista, bloqueado
         
-            
+    saque = float(input("VALOR DE SAQUE: "))
+    while saque < 0:
+        print("VALOR INVÁLIDO PARA SAQUE DIGITE NOVAMENTE")
+        saque = float(input("VALOR DO SAQUE "))
+    saldoAtual = lista[4]
+    limite = lista[5]
+    if saldoAtual >= saque:
+        print("SAQUE FEITO COM SUCESSO \n")
+        lista[4] = lista[4] - saque
+        print(lista)
+        return lista, bloqueado
+    else:
+        if limite >= saque:
+            print("VOCÊ ESTÁ USANDO SEU LIMITE DE CRÉDITO")
+            lista[4] = lista[4] - saque
+            lista[5] = lista[5] - saque
+            return lista, bloqueado
+        else:
+            print("SAQUE RECUSADO - SEM SALDO E LIMITE DISPONÍVEL PARA EFETUAR O SAQUE")
+            return lista, bloqueado
 
-
-
+def saldo(lista):
+    print("MACK BANK - CONSULTA SALDO")
+    numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
+    while numConta != lista[0]:
+        print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O CADASTRADO")
+        numConta = int(input("DIGITE NOVAMENTE O NÚMERO DA CONTA: "))
+    
+    print(f"NOME DO CLIENTE: {lista[1]}")
+    senha = input("INFORME SUA SENHA: ")
+    bloqueado = None
+    cont = 3
+    while senha != lista[6]:
+        print(f"SENHA ERRADA, VOCÊ AINDA TEM {cont} TENTATIVAS ANTES DO BLOQUEIO")
+        senha = input("INFORME SUA SENHA: ")
+        cont-=1
+        if cont == 0:
+            print("SUA CONTA ESTÁ BLOQUEADA POR ERRO DE SENHA \n ENTRE EM CONTATO CONOSCO PARA O DESBLOQUEIO")
+            bloqueado = True
+            return lista, bloqueado
+    saldoAtual = lista[4]
+    limiteAtual = lista[5]
+    print(f"SALDO EM CONTA: R$ {saldoAtual}")
+    print(f"LIMITE DE CRÉDITO: R$ {limiteAtual}")
+    return lista, bloqueado
 
 menu()
 print("Obrigado por utilizar nosso sistema :) ")
