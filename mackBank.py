@@ -25,6 +25,9 @@ def menu():
     voltarMenu = True
     bloqueado = False
     lista = []
+    extrato = [
+        [ ]
+    ]
     def sair():
         opcaoSair = int(input("DESEJA VOLTAR AO MENU? \n 1 - VOLTAR AO MENU \n 2 - Sair \n"))
         if opcaoSair == 1:
@@ -60,14 +63,16 @@ def menu():
         print("(7) - SAIR ")
         opcao = int(input("ESCOLHA SUA OPÇÃO: "))
         if opcao == 2:
-            deposito(lista)
+            deposito(lista,extrato)
             voltarMenu = sair()
         elif opcao == 3:
-            lista, bloqueado = saque(lista)
+            lista, bloqueado = saque(lista,extrato)
             voltarMenu = sair()
         elif opcao == 4:
             lista, bloqueado = saldo(lista)
             voltarMenu = sair()
+        elif opcao == 5:
+            lista, bloqueado = tabela(lista,extrato)
 
         elif opcao == 7:
             return None
@@ -154,7 +159,7 @@ def cadastro():
         return cliente, cadastrado
 
 
-def deposito(lista):
+def deposito(lista,extrato):
     print("MACK BANK - SAQUE DA CONTA")
     numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
     while numConta != lista[0]:
@@ -164,10 +169,13 @@ def deposito(lista):
     print(f"NOME DO CLIENTE: {lista[1]}")
     deposito = float(input("VALOR DO DEPÓSITO: "))
     lista[4] = lista[4] + deposito
+    
+    extrato.append([f"Depósito R$ {deposito}", "R$ {}"])
     print("DEPOSITO REALIZADO COM SUCESSO")
+
     return lista
 
-def saque(lista):
+def saque(lista,extrato):
     print("MACK BANK - SAQUE DA CONTA")
     numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
     while numConta != lista[0]:
@@ -232,6 +240,9 @@ def saldo(lista):
     print(f"SALDO EM CONTA: R$ {saldoAtual}")
     print(f"LIMITE DE CRÉDITO: R$ {limiteAtual}")
     return lista, bloqueado
+
+def tabela (lista,extrato):
+    
 
 menu()
 print("Obrigado por utilizar nosso sistema :) ")
