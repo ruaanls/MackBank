@@ -26,7 +26,7 @@ def menu():
     bloqueado = False
     lista = []
     extrato = [
-        [ ]
+        ["Movimentações", "Saldo Atual", "Limite Atual"]
     ]
     def sair():
         opcaoSair = int(input("DESEJA VOLTAR AO MENU? \n 1 - VOLTAR AO MENU \n 2 - Sair \n"))
@@ -54,7 +54,7 @@ def menu():
             
     while voltarMenu == True or bloqueado == False:
     
-        print(f"Seja Bem-Vindo, {lista[1]}")
+        print(f"\n\nSeja Bem-Vindo, {lista[1]}")
         print("(2) - DEPOSITAR ")
         print("(3) - SACAR ")
         print("(4) - CONSULTAR SALDO ")
@@ -73,7 +73,9 @@ def menu():
             voltarMenu = sair()
         elif opcao == 5:
             lista, bloqueado = tabela(lista,extrato)
-
+        
+        elif opcao == 6:
+            
         elif opcao == 7:
             return None
 
@@ -91,7 +93,7 @@ def cadastro():
             repitaTeste = repitaSenha.upper()
         cliente.append(senha)
         cadastrado = True
-        print("CADASTRO REALIZADO! PRESSIONE UMA TECLA PARA VOLTAR AO MENU")
+        print("CADASTRO REALIZADO! PRESSIONE UMA TECLA PARA VOLTAR AO MENU \n\n\n\n")
         input()
         return cadastrado
 
@@ -160,7 +162,7 @@ def cadastro():
 
 
 def deposito(lista,extrato):
-    print("MACK BANK - SAQUE DA CONTA")
+    print("\n\n\n\nMACK BANK - DEPÓSITO NA CONTA")
     numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
     while numConta != lista[0]:
         print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O CADASTRADO")
@@ -170,13 +172,14 @@ def deposito(lista,extrato):
     deposito = float(input("VALOR DO DEPÓSITO: "))
     lista[4] = lista[4] + deposito
     saldoAtual = lista[4]
-    extrato.append([f"Depósito R$ {deposito}", "R$ {lista[4]}"])
-    print("DEPOSITO REALIZADO COM SUCESSO")
+    limiteAtual = lista[5]
+    extrato.append(["+ R$ {}".format(deposito), "R$ {}".format(saldoAtual), "R$ {}".format(limiteAtual)])
+    print("\n\nDEPOSITO REALIZADO COM SUCESSO\n\n")
 
     return lista
 
 def saque(lista,extrato):
-    print("MACK BANK - SAQUE DA CONTA")
+    print("\n\n\n\nMACK BANK - SAQUE DA CONTA")
     numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
     while numConta != lista[0]:
         print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O CADASTRADO")
@@ -204,7 +207,9 @@ def saque(lista,extrato):
     if saldoAtual >= saque:
         print("SAQUE FEITO COM SUCESSO \n")
         lista[4] = lista[4] - saque
-        print(lista)
+        saldoAtual = lista[4]
+        limiteAtual = lista[5]
+        extrato.append(["- R$ {}".format(saque), "R$ {}".format(saldoAtual), "R$ {}".format(limiteAtual)])
         return lista, bloqueado
     else:
         if limite >= saque:
@@ -217,7 +222,7 @@ def saque(lista,extrato):
             return lista, bloqueado
 
 def saldo(lista):
-    print("MACK BANK - CONSULTA SALDO")
+    print("\n\n\n\nMACK BANK - CONSULTA SALDO")
     numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
     while numConta != lista[0]:
         print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O CADASTRADO")
@@ -242,8 +247,34 @@ def saldo(lista):
     return lista, bloqueado
 
 def tabela (lista,extrato):
+    print("\n\n\n\nMACK BANK - EXTRATO DA CONTA ")
+    numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
+    while numConta != lista[0]:
+        print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O CADASTRADO")
+        numConta = int(input("DIGITE NOVAMENTE O NÚMERO DA CONTA: "))
     
+    print(f"NOME DO CLIENTE: {lista[1]}")
+    senha = input("INFORME SUA SENHA: ")
+    bloqueado = None
+    cont = 3
+    while senha != lista[6]:
+        print(f"SENHA ERRADA, VOCÊ AINDA TEM {cont} TENTATIVAS ANTES DO BLOQUEIO")
+        senha = input("INFORME SUA SENHA: ")
+        cont-=1
+        if cont == 0:
+            print("SUA CONTA ESTÁ BLOQUEADA POR ERRO DE SENHA \n ENTRE EM CONTATO CONOSCO PARA O DESBLOQUEIO")
+            bloqueado = True
+            return lista, bloqueado
+    print("\n\nHISTÓRICO DE CONTA - EXTRATO BANCÁRIO\n")
+    linhas = len(extrato)
+    for i in range(0,linhas):
+        for j in range(0,3):
+            print("{:<15}".format(extrato[i][j].strip()), end="   ")
+        print("\n")
+    return lista, bloqueado
+
+
 
 menu()
-print("Obrigado por utilizar nosso sistema :) ")
+print("\n\nObrigado por utilizar nosso sistema :) ")
 print("Projeto Desenvolvido por Ruan Lima Silva - 32385633")
