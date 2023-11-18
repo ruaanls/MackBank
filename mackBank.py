@@ -25,7 +25,7 @@ def menu():
     extrato = [
         [ ]
     ]
-    def sair(): # Função Sair usada após o término das funções de cada opção no Menu
+    def sair():
         opcaoSair = int(input("DESEJA VOLTAR AO MENU? \n 1 - VOLTAR AO MENU \n 2 - Sair \n"))
         if opcaoSair == 1:
             voltarMenu = True
@@ -58,7 +58,7 @@ def menu():
         print("(5) - CONSULTAR EXTRATO ")
         print("(6) - Investimentos ")
         print("(7) - SAIR ")
-        opcao = int(input("ESCOLHA SUA OPÇÃO: ")) #Após escolher a opção levar a respectiva função
+        opcao = int(input("ESCOLHA SUA OPÇÃO: "))
         if opcao == 2:
             deposito(lista,extrato)
             voltarMenu = sair()
@@ -79,12 +79,12 @@ def menu():
 
 
 
-def cadastro(): #Função de Cadastro de Conta
-    def verificaSenha(senha): #Função para criação e verificação se as duas senhas criadas são iguais
+def cadastro():
+    def verificaSenha(senha):
         repitaSenha = input("REPITA A SENHA: ")
         senhaTeste = senha.upper()
         repitaTeste = repitaSenha.upper()
-        while senhaTeste != repitaSenha: #Comparação da senha digitada com a armazenada
+        while senhaTeste != repitaSenha:
             print("AS SENHAS NÃO SÃO IGUAIS, DIGITE NOVAMENTE")
             repitaSenha = input("REPITA A SENHA: ")
             senhaTeste = senha.upper()
@@ -147,13 +147,13 @@ def cadastro(): #Função de Cadastro de Conta
                 cliente.append(limite)
     senha = input("SENHA:" )
     caracter = len(senha)
-    if caracter != 6: #definição da senha que obrigatoriamente deverá ter 6 digitos
+    if caracter != 6:
         while caracter != 6:
             print("SUA SENHA NÃO TEM 6 CARACTERES, POR FAVOR DIGITE NOVAMENTE")
             senha = input("SENHA: ")
             if len(senha) == 6:
                 cadastrado = verificaSenha(senha)
-                return cliente, cadastrado #retorna o valor da função cadastrado que se for True vai liberar as outras opções do menu
+                return cliente, cadastrado
     else:
         cadastrado = verificaSenha(senha)
         return cliente, cadastrado
