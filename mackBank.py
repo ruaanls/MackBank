@@ -1,21 +1,7 @@
 
 import random
-''' 
 
-Lista Cliente - Índices 
-
-0 - Número Conta
-1 - Nome
-2 - Telefone
-3 - Email
-4 - Saldo Inícial
-5 - Limite de Crédito
-6 - Senha 
-
-
-
-'''
-def menu():
+def menu(): # Função Menu e todas as variáveis que serão usadas
 
     opcao = 0
     opcaoSair = None
@@ -26,7 +12,7 @@ def menu():
     extrato = [
         ["Movimentações", "Saldo Atual", "Limite Atual"]
     ]
-    def sair():
+    def sair(): # Função Sair usada após o término das funções de cada opção no Menu
         opcaoSair = int(input("DESEJA VOLTAR AO MENU? \n 1 - VOLTAR AO MENU \n 2 - Sair \n"))
         if opcaoSair == 1:
             voltarMenu = True
@@ -39,7 +25,7 @@ def menu():
             voltarMenu = True
         return voltarMenu
 
-    while cadastrado == False:
+    while cadastrado == False: # Caso o usuário não tenha se cadastrado, mostrar apenas a opção 1
         print("MACK BANK - ESCOLHA UMA OPÇÃO")
         print("(1) - CADASTRAR CONTA CORRENTE")
         print("Crie sua conta para liberar as outras opções")
@@ -50,7 +36,7 @@ def menu():
             print("CRIE SUA CONTA PARA LIBERAR AS OUTRAS OPÇÕES ")
 
 
-    while voltarMenu == True or bloqueado == False:
+    while voltarMenu == True or bloqueado == False: #Após o cadastro mostrar opções do menu
 
         print(f"Seja Bem-Vindo, {lista[1]}")
         print("(2) - DEPOSITAR ")
@@ -59,7 +45,7 @@ def menu():
         print("(5) - CONSULTAR EXTRATO ")
         print("(6) - Investimentos ")
         print("(7) - SAIR ")
-        opcao = int(input("ESCOLHA SUA OPÇÃO: "))
+        opcao = int(input("ESCOLHA SUA OPÇÃO: ")) #Após escolher a opção levar a respectiva função
         if opcao == 2:
             deposito(lista,extrato)
             voltarMenu = sair()
@@ -75,19 +61,19 @@ def menu():
         elif opcao == 6:
             investimentos(lista)
             sair()
-        elif opcao == 7:
+        elif opcao == 7: #Caso selecione 7 saia da função retornando None
             return None
         else:
             print("OPÇÃO INVÁLIDA, TENTE NOVAMENTE")
 
 
 
-def cadastro():
-    def verificaSenha(senha):
+def cadastro(): #Função de Cadastro de Conta
+    def verificaSenha(senha): #Função para criação e verificação se as duas senhas criadas são iguais
         repitaSenha = input("REPITA A SENHA: ")
         senhaTeste = senha.upper()
         repitaTeste = repitaSenha.upper()
-        while senhaTeste != repitaSenha:
+        while senhaTeste != repitaSenha: #Comparação da senha digitada com a armazenada
             print("AS SENHAS NÃO SÃO IGUAIS, DIGITE NOVAMENTE")
             repitaSenha = input("REPITA A SENHA: ")
             senhaTeste = senha.upper()
@@ -150,19 +136,19 @@ def cadastro():
                 cliente.append(limite)
     senha = input("SENHA:" )
     caracter = len(senha)
-    if caracter != 6:
+    if caracter != 6: #definição da senha que obrigatoriamente deverá ter 6 digitos
         while caracter != 6:
             print("SUA SENHA NÃO TEM 6 CARACTERES, POR FAVOR DIGITE NOVAMENTE")
             senha = input("SENHA: ")
             if len(senha) == 6:
                 cadastrado = verificaSenha(senha)
-                return cliente, cadastrado
+                return cliente, cadastrado #retorna o valor da função cadastrado que se for True vai liberar as outras opções do menu
     else:
         cadastrado = verificaSenha(senha)
         return cliente, cadastrado
 
 
-def deposito(lista,extrato):
+def deposito(lista,extrato): #Função de Depósito
     print("\n\n\n\nMACK BANK - DEPÓSITO NA CONTA")
     numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
     while numConta != lista[0]:
@@ -171,7 +157,7 @@ def deposito(lista,extrato):
 
     print(f"NOME DO CLIENTE: {lista[1]}")
     deposito = float(input("VALOR DO DEPÓSITO: "))
-    lista[4] = lista[4] + deposito
+    lista[4] = lista[4] + deposito #no indice 4 da lista será somado ao valor atual o valor do depósito
     saldoAtual = lista[4]
     limiteAtual = lista[5]
     extrato.append(["+ R$ {}".format(deposito), "R$ {}".format(saldoAtual), "R$ {}".format(limiteAtual)])
@@ -181,7 +167,7 @@ def deposito(lista,extrato):
 
 def saque(lista,extrato):
     print("\n\n\n\nMACK BANK - SAQUE DA CONTA")
-    bloqueado = verifica(lista) 
+    bloqueado = verifica(lista) #Bloqueado recebe o retorno da função verifica que realiza a verificação de senha diferente da comparação de senhas no inicio
 
     if bloqueado == False:
 
@@ -199,7 +185,7 @@ def saque(lista,extrato):
             extrato.append(["- R$ {}".format(saque), "R$ {}".format(saldoAtual), "R$ {}".format(limiteAtual)])
             return lista, bloqueado
         else:
-            if limite >= saque:
+            if limite >= saque: #Se  o limite for maior ou igual ao saque o valor será descontato do limite
                 print("VOCÊ ESTÁ USANDO SEU LIMITE DE CRÉDITO")
                 lista[4] = lista[4] - saque
                 lista[5] = lista[5] - saque
@@ -210,7 +196,7 @@ def saque(lista,extrato):
     else:
         return lista,bloqueado
 
-def saldo(lista):
+def saldo(lista): #Função de consulta de saldo através da leitura do indice 4 da lista
     print("\n\n\n\nMACK BANK - CONSULTA SALDO")
     bloqueado = verifica(lista)
     if bloqueado == False:
@@ -223,7 +209,7 @@ def saldo(lista):
     else:
         return lista,bloqueado
 
-def tabela (lista,extrato):
+def tabela (lista,extrato): #Função de extrato que será apresentada com uma matriz 
     print("\n\n\n\nMACK BANK - EXTRATO DA CONTA ")
     bloqueado = verifica(lista)
     if bloqueado == False:
@@ -237,9 +223,9 @@ def tabela (lista,extrato):
     else:
         return lista,bloqueado
 
-def investimentos(lista):
+def investimentos(lista): #Função da calculadora de investimentos a função Extra do programa
     print("\n\n\nSeja bem vindo ao MACK INVEST - A sua nova plataforma de projeção de investimentos ")
-    bloqueado = verifica(lista)
+    bloqueado = verifica(lista) #Verificação de segurança para entrar
     opcao = 0
     if bloqueado == False:
         while opcao <= 0 or opcao >=3:
@@ -248,7 +234,7 @@ def investimentos(lista):
             print("1 - Calculadora de Rendimentos")
             opcao = int(input("ESCOLHA SUA OPÇÃO: "))
         if opcao == 1:
-            calculadora()
+            calculadora() #Roda a função calculadora
             return lista,bloqueado
 
     else:
@@ -258,13 +244,14 @@ def investimentos(lista):
 
 
 
-def calculadora():
-    mensal = float(input("Aporte Mensal: "))
-    taxaMensal = float(input("Taxa ao Ano: "))
-    taxaMensal = (taxaMensal / 100) / 12 # 0.1238 / 12 (taxa / 100) /12
-    tempo = int(input("Tempo em Anos: "))# > EM ANOS 1 2 / 12
-    tempo = tempo * 12
-    atual = float(input("Aporte Inicial: "))
+def calculadora(): #Função calculadora de investimentos
+    mensal = float(input("Aporte Mensal: ")) # Quanto de aportes mentais?
+    taxaMensal = float(input("Taxa ao Ano: ")) #Qual a taxa anual do seu investimento?
+    taxaMensal = (taxaMensal / 100) / 12  #Conversão da taxa anual para mensal
+    tempo = int(input("Tempo em Anos: ")) #Quantos anos você quer deixar investindo?
+    tempo = tempo * 12 #conversão do tempo de anos para meses
+    atual = float(input("Aporte Inicial: ")) #Quanto de aporte inicial você vai dar?
+    
     while tempo < 1:
         print("OBRIGATORIAMENTE O INVESTIMENTO DEVE SER MAIOR OU IGUAL A 1 ANO")
         tempo = int(input("Tempo em Anos: "))
@@ -287,7 +274,7 @@ def calculadora():
     print("Ganho em juros: R$ {:.2f}".format(juros))  
     return None
 
-def verifica(lista):
+def verifica(lista): #Função de verificação de segurança usada em todos as operações importantes do código
     numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
     while numConta != lista[0]:
         print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O     CADASTRADO")
