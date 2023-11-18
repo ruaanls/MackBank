@@ -1,6 +1,5 @@
+
 import random
-
-
 ''' 
 
 Lista Cliente - Índices 
@@ -15,10 +14,9 @@ Lista Cliente - Índices
 
 
 
-aaaa
 '''
 def menu():
-    
+
     opcao = 0
     opcaoSair = None
     cadastrado = False
@@ -32,15 +30,15 @@ def menu():
         opcaoSair = int(input("DESEJA VOLTAR AO MENU? \n 1 - VOLTAR AO MENU \n 2 - Sair \n"))
         if opcaoSair == 1:
             voltarMenu = True
-            
+
         elif opcaoSair == 2:
             voltarMenu = False
-            
+
         else:
             print("VALOR INVÁLIDO, VOLTANDO AO MENU")
             voltarMenu = True
         return voltarMenu
-    
+
     while cadastrado == False:
         print("MACK BANK - ESCOLHA UMA OPÇÃO")
         print("(1) - CADASTRAR CONTA CORRENTE")
@@ -51,9 +49,9 @@ def menu():
         else:
             print("CRIE SUA CONTA PARA LIBERAR AS OUTRAS OPÇÕES ")
 
-            
+
     while voltarMenu == True or bloqueado == False:
-    
+
         print(f"Seja Bem-Vindo, {lista[1]}")
         print("(2) - DEPOSITAR ")
         print("(3) - SACAR ")
@@ -75,7 +73,8 @@ def menu():
             lista, bloqueado = tabela(lista,extrato)
             voltarMenu = sair()
         elif opcao == 6:
-            return None
+            investimentos(lista)
+            sair()
         elif opcao == 7:
             return None
         else:
@@ -241,37 +240,59 @@ def tabela (lista,extrato):
 def investimentos(lista):
     print("\n\n\nSeja bem vindo ao MACK INVEST - A sua nova plataforma de projeção de investimentos ")
     bloqueado = verifica(lista)
-    opcao = None
+    opcao = 0
     if bloqueado == False:
         while opcao <= 0 or opcao >=3:
 
             print("MENU -- Escolha a modalidade de investimentos\n")
-            print("1 - Renda Fixa")
-            print("2 - Fundos de investimentos ")
-            print("3 - Calculadora de Rendimentos")
+            print("1 - Calculadora de Rendimentos")
             opcao = int(input("ESCOLHA SUA OPÇÃO: "))
         if opcao == 1:
-            rendaFixa(lista)
+            calculadora()
+            return lista,bloqueado
 
     else:
         return lista, bloqueado
 
 
-def rendaFixa(lista):
-    print("teste")
 
-def fundos(lista):
-    print("Teste")
 
-def calculadora(lista):
-    
+
+def calculadora():
+    mensal = float(input("Aporte Mensal: "))
+    taxaMensal = float(input("Taxa ao Ano: "))
+    taxaMensal = (taxaMensal / 100) / 12 # 0.1238 / 12 (taxa / 100) /12
+    tempo = int(input("Tempo em Anos: "))# > EM ANOS 1 2 / 12
+    tempo = tempo * 12
+    atual = float(input("Aporte Inicial: "))
+    while tempo < 1:
+        print("OBRIGATORIAMENTE O INVESTIMENTO DEVE SER MAIOR OU IGUAL A 1 ANO")
+        tempo = int(input("Tempo em Anos: "))
+
+    valores = []
+    inicial = atual
+    juros = mensal * tempo
+    mesesAno = []
+    for meses in range(1, tempo+1):
+        atual += mensal
+        atual *= (1 + taxaMensal)
+        if meses % 4 == 0:
+            valores.append(round(atual, 2))
+            mesesAno.append(meses)
+
+    totalInvestido = inicial + juros
+    juros = atual - (inicial + juros)
+
+    print("Total Investido: R$ {:.2f}".format(totalInvestido))
+    print("Ganho em juros: R$ {:.2f}".format(juros))  
+    return None
 
 def verifica(lista):
     numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
     while numConta != lista[0]:
-        print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O CADASTRADO")
+        print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O     CADASTRADO")
         numConta = int(input("DIGITE NOVAMENTE O NÚMERO DA CONTA: "))
-    
+
     print(f"NOME DO CLIENTE: {lista[1]}")
     senha = input("INFORME SUA SENHA: ")
     bloqueado = False
@@ -285,10 +306,6 @@ def verifica(lista):
             bloqueado = True
             return lista, bloqueado
     return bloqueado
-
-
-
-
 menu()
 print("\n\nObrigado por utilizar nosso sistema :) ")
 print("Projeto Desenvolvido por Ruan Lima Silva - 32385633")
