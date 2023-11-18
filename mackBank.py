@@ -1,6 +1,5 @@
+
 import random
-
-
 ''' 
 
 Lista Cliente - Índices 
@@ -15,10 +14,9 @@ Lista Cliente - Índices
 
 
 
-aaaa
 '''
 def menu():
-    
+
     opcao = 0
     opcaoSair = None
     cadastrado = False
@@ -26,21 +24,21 @@ def menu():
     bloqueado = False
     lista = []
     extrato = [
-        [ ]
+        ["Movimentações", "Saldo Atual", "Limite Atual"]
     ]
     def sair():
         opcaoSair = int(input("DESEJA VOLTAR AO MENU? \n 1 - VOLTAR AO MENU \n 2 - Sair \n"))
         if opcaoSair == 1:
             voltarMenu = True
-            
+
         elif opcaoSair == 2:
             voltarMenu = False
-            
+
         else:
             print("VALOR INVÁLIDO, VOLTANDO AO MENU")
             voltarMenu = True
         return voltarMenu
-    
+
     while cadastrado == False:
         print("MACK BANK - ESCOLHA UMA OPÇÃO")
         print("(1) - CADASTRAR CONTA CORRENTE")
@@ -51,9 +49,9 @@ def menu():
         else:
             print("CRIE SUA CONTA PARA LIBERAR AS OUTRAS OPÇÕES ")
 
-            
+
     while voltarMenu == True or bloqueado == False:
-    
+
         print(f"Seja Bem-Vindo, {lista[1]}")
         print("(2) - DEPOSITAR ")
         print("(3) - SACAR ")
@@ -73,9 +71,14 @@ def menu():
             voltarMenu = sair()
         elif opcao == 5:
             lista, bloqueado = tabela(lista,extrato)
-
+            voltarMenu = sair()
+        elif opcao == 6:
+            investimentos(lista)
+            sair()
         elif opcao == 7:
             return None
+        else:
+            print("OPÇÃO INVÁLIDA, TENTE NOVAMENTE")
 
 
 
@@ -91,7 +94,7 @@ def cadastro():
             repitaTeste = repitaSenha.upper()
         cliente.append(senha)
         cadastrado = True
-        print("CADASTRO REALIZADO! PRESSIONE UMA TECLA PARA VOLTAR AO MENU")
+        print("CADASTRO REALIZADO! PRESSIONE UMA TECLA PARA VOLTAR AO MENU \n\n\n\n")
         input()
         return cadastrado
 
@@ -160,7 +163,7 @@ def cadastro():
 
 
 def deposito(lista,extrato):
-    print("MACK BANK - SAQUE DA CONTA")
+    print("\n\n\n\nMACK BANK - DEPÓSITO NA CONTA")
     numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
     while numConta != lista[0]:
         print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O CADASTRADO")
@@ -169,63 +172,130 @@ def deposito(lista,extrato):
     print(f"NOME DO CLIENTE: {lista[1]}")
     deposito = float(input("VALOR DO DEPÓSITO: "))
     lista[4] = lista[4] + deposito
-    
-    extrato.append([f"Depósito R$ {deposito}", "R$ {}"])
-    print("DEPOSITO REALIZADO COM SUCESSO")
+    saldoAtual = lista[4]
+    limiteAtual = lista[5]
+    extrato.append(["+ R$ {}".format(deposito), "R$ {}".format(saldoAtual), "R$ {}".format(limiteAtual)])
+    print("\n\nDEPOSITO REALIZADO COM SUCESSO\n\n")
 
     return lista
 
 def saque(lista,extrato):
-    print("MACK BANK - SAQUE DA CONTA")
-    numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
-    while numConta != lista[0]:
-        print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O CADASTRADO")
-        numConta = int(input("DIGITE NOVAMENTE O NÚMERO DA CONTA: "))
-    
-    print(f"NOME DO CLIENTE: {lista[1]}")
-    senha = input("INFORME SUA SENHA: ")
-    bloqueado = None
-    cont = 3
-    while senha != lista[6]:
-        print(f"SENHA ERRADA, VOCÊ AINDA TEM {cont} TENTATIVAS ANTES DO BLOQUEIO")
-        senha = input("INFORME SUA SENHA: ")
-        cont-=1
-        if cont == 0:
-            print("SUA CONTA ESTÁ BLOQUEADA POR ERRO DE SENHA \n ENTRE EM CONTATO CONOSCO PARA O DESBLOQUEIO")
-            bloqueado = True
-            return lista, bloqueado
-        
-    saque = float(input("VALOR DE SAQUE: "))
-    while saque < 0:
-        print("VALOR INVÁLIDO PARA SAQUE DIGITE NOVAMENTE")
-        saque = float(input("VALOR DO SAQUE "))
-    saldoAtual = lista[4]
-    limite = lista[5]
-    if saldoAtual >= saque:
-        print("SAQUE FEITO COM SUCESSO \n")
-        lista[4] = lista[4] - saque
-        print(lista)
-        return lista, bloqueado
-    else:
-        if limite >= saque:
-            print("VOCÊ ESTÁ USANDO SEU LIMITE DE CRÉDITO")
+    print("\n\n\n\nMACK BANK - SAQUE DA CONTA")
+    bloqueado = verifica(lista) 
+
+    if bloqueado == False:
+
+        saque = float(input("VALOR DE SAQUE: "))
+        while saque < 0:
+            print("VALOR INVÁLIDO PARA SAQUE DIGITE NOVAMENTE")
+            saque = float(input("VALOR DO SAQUE "))
+        saldoAtual = lista[4]
+        limite = lista[5]
+        if saldoAtual >= saque:
+            print("SAQUE FEITO COM SUCESSO \n")
             lista[4] = lista[4] - saque
-            lista[5] = lista[5] - saque
+            saldoAtual = lista[4]
+            limiteAtual = lista[5]
+            extrato.append(["- R$ {}".format(saque), "R$ {}".format(saldoAtual), "R$ {}".format(limiteAtual)])
             return lista, bloqueado
         else:
-            print("SAQUE RECUSADO - SEM SALDO E LIMITE DISPONÍVEL PARA EFETUAR O SAQUE")
-            return lista, bloqueado
+            if limite >= saque:
+                print("VOCÊ ESTÁ USANDO SEU LIMITE DE CRÉDITO")
+                lista[4] = lista[4] - saque
+                lista[5] = lista[5] - saque
+                return lista, bloqueado
+            else:
+                print("SAQUE RECUSADO - SEM SALDO E LIMITE DISPONÍVEL PARA EFETUAR O SAQUE")
+                return lista, bloqueado
+    else:
+        return lista,bloqueado
 
 def saldo(lista):
-    print("MACK BANK - CONSULTA SALDO")
+    print("\n\n\n\nMACK BANK - CONSULTA SALDO")
+    bloqueado = verifica(lista)
+    if bloqueado == False:
+
+        saldoAtual = lista[4]
+        limiteAtual = lista[5]
+        print(f"SALDO EM CONTA: R$ {saldoAtual}")
+        print(f"LIMITE DE CRÉDITO: R$ {limiteAtual}")
+        return lista, bloqueado
+    else:
+        return lista,bloqueado
+
+def tabela (lista,extrato):
+    print("\n\n\n\nMACK BANK - EXTRATO DA CONTA ")
+    bloqueado = verifica(lista)
+    if bloqueado == False:
+        print("\n\nHISTÓRICO DE CONTA - EXTRATO BANCÁRIO\n")
+        linhas = len(extrato)
+        for i in range(0,linhas):
+            for j in range(0,3):
+                print("{:<15}".format(extrato[i][j].strip()), end="   ")
+            print("\n")
+        return lista, bloqueado
+    else:
+        return lista,bloqueado
+
+def investimentos(lista):
+    print("\n\n\nSeja bem vindo ao MACK INVEST - A sua nova plataforma de projeção de investimentos ")
+    bloqueado = verifica(lista)
+    opcao = 0
+    if bloqueado == False:
+        while opcao <= 0 or opcao >=3:
+
+            print("MENU -- Escolha a modalidade de investimentos\n")
+            print("1 - Calculadora de Rendimentos")
+            opcao = int(input("ESCOLHA SUA OPÇÃO: "))
+        if opcao == 1:
+            calculadora()
+            return lista,bloqueado
+
+    else:
+        return lista, bloqueado
+
+
+
+
+
+def calculadora():
+    mensal = float(input("Aporte Mensal: "))
+    taxaMensal = float(input("Taxa ao Ano: "))
+    taxaMensal = (taxaMensal / 100) / 12 # 0.1238 / 12 (taxa / 100) /12
+    tempo = int(input("Tempo em Anos: "))# > EM ANOS 1 2 / 12
+    tempo = tempo * 12
+    atual = float(input("Aporte Inicial: "))
+    while tempo < 1:
+        print("OBRIGATORIAMENTE O INVESTIMENTO DEVE SER MAIOR OU IGUAL A 1 ANO")
+        tempo = int(input("Tempo em Anos: "))
+
+    valores = []
+    inicial = atual
+    juros = mensal * tempo
+    mesesAno = []
+    for meses in range(1, tempo+1):
+        atual += mensal
+        atual *= (1 + taxaMensal)
+        if meses % 4 == 0:
+            valores.append(round(atual, 2))
+            mesesAno.append(meses)
+
+    totalInvestido = inicial + juros
+    juros = atual - (inicial + juros)
+
+    print("Total Investido: R$ {:.2f}".format(totalInvestido))
+    print("Ganho em juros: R$ {:.2f}".format(juros))  
+    return None
+
+def verifica(lista):
     numConta = int(input("INFORME O NÚMERO DE SUA CONTA: "))
     while numConta != lista[0]:
-        print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O CADASTRADO")
+        print("NUMERO DE CONTA DIGITADO NÃO CONDIZ COM O     CADASTRADO")
         numConta = int(input("DIGITE NOVAMENTE O NÚMERO DA CONTA: "))
-    
+
     print(f"NOME DO CLIENTE: {lista[1]}")
     senha = input("INFORME SUA SENHA: ")
-    bloqueado = None
+    bloqueado = False
     cont = 3
     while senha != lista[6]:
         print(f"SENHA ERRADA, VOCÊ AINDA TEM {cont} TENTATIVAS ANTES DO BLOQUEIO")
@@ -235,15 +305,7 @@ def saldo(lista):
             print("SUA CONTA ESTÁ BLOQUEADA POR ERRO DE SENHA \n ENTRE EM CONTATO CONOSCO PARA O DESBLOQUEIO")
             bloqueado = True
             return lista, bloqueado
-    saldoAtual = lista[4]
-    limiteAtual = lista[5]
-    print(f"SALDO EM CONTA: R$ {saldoAtual}")
-    print(f"LIMITE DE CRÉDITO: R$ {limiteAtual}")
-    return lista, bloqueado
-
-def tabela (lista,extrato):
-    
-
+    return bloqueado
 menu()
-print("Obrigado por utilizar nosso sistema :) ")
+print("\n\nObrigado por utilizar nosso sistema :) ")
 print("Projeto Desenvolvido por Ruan Lima Silva - 32385633")
