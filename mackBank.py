@@ -1,5 +1,7 @@
-
-import random
+Python 3.7.2 (tags/v3.7.2:9a3ffc0492, Dec 23 2018, 23:09:28) [MSC v.1916 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license()" for more information.
+>>> import random
+import re
 
 def menu(): # Função Menu e todas as variáveis que serão usadas
 
@@ -67,16 +69,13 @@ def menu(): # Função Menu e todas as variáveis que serão usadas
             print("OPÇÃO INVÁLIDA, TENTE NOVAMENTE")
 
 
-
-def cadastro(): #Função de Cadastro de Conta
-    def verificaSenha(senha): #Função para criação e verificação se as duas senhas criadas são iguais
+def verificaSenha(senha, cliente): #Função para criação e verificação se as duas senhas criadas são iguais
         repitaSenha = input("REPITA A SENHA: ")
         senhaTeste = senha.upper()
         repitaTeste = repitaSenha.upper()
-        while senhaTeste != repitaSenha: #Comparação da senha digitada com a armazenada
+        while senhaTeste != repitaTeste: #Comparação da senha digitada com a armazenada
             print("AS SENHAS NÃO SÃO IGUAIS, DIGITE NOVAMENTE")
             repitaSenha = input("REPITA A SENHA: ")
-            senhaTeste = senha.upper()
             repitaTeste = repitaSenha.upper()
         cliente.append(senha)
         cadastrado = True
@@ -84,38 +83,54 @@ def cadastro(): #Função de Cadastro de Conta
         input()
         return cadastrado
 
+def cadastro(): #Função de Cadastro de Conta
     cadastrado = False
     cliente = []
     numConta = random.randint(1000,9999)
     cliente.append(numConta)
     print(f"NÚMERO DA CONTA: {numConta}")
     nome = input("NOME DO CLIENTE: ")
-    if nome != '':
+    verificaNome = nome.isnumeric()
+    if nome != '' and verificaNome == False:
         cliente.append(nome)
     else:
-        while nome == '':
-            print("NOME DIGITADO EM BRANCO, POR FAVOR DIGITE SEU NOME")
+        while nome == '' or verificaNome == True:
+            print("NOME INVÁLIDO , POR FAVOR DIGITE NOVAMENTE")
             nome = input("NOME DO CLIENTE: ")
-            if nome != '':
+            verificaNome = nome.isnumeric()
+            if nome != '' and verificaNome == False:
                 cliente.append(nome)
+
     telefone = input("TELEFONE: ")
-    if telefone != '':
+    telefone.replace(" ","")
+    verificaTel = telefone.isnumeric()
+    if telefone != '' and verificaTel == True:
         cliente.append(telefone)
     else:
-        while telefone == '':
-            print("TELEFONE DIGITADO EM BRANCO, POR FAVOR DIGITE SEU TELEFONE")
-            telefone = input("TELEFONE")
-            if telefone != '':
+        while telefone == '' or verificaTel == False:
+            print("TELEFONE INVÁLIDO, POR FAVOR DIGITE SEU TELEFONE")
+            telefone = input("TELEFONE: ")
+            telefone.replace(" ","")
+            verificaTel = telefone.isnumeric()
+            if telefone != '' and verificaTel == True:
                 cliente.append(telefone)
+
     email = input("EMAIL: ")
-    if telefone != '':
+    testeArroba = email.find("@")
+
+    
+    if email != '' and testeArroba > 3:
         cliente.append(email)
     else:
-        while email == '':
+        while email == '' or testeArroba < 3:
             print("EMAIL DIGITADO EM BRANCO, POR FAVOR DIGITE SEU E-MAIL ")
             email = input("EMAIL: ")
-            if email != '':
+            testeArroba = email.find("@")
+
+            if email != '' and testeArroba > 3:
                 cliente.append(email)
+
+
     saldoInicio = float(input("SALDO INICIAL: "))
     if saldoInicio >= 1000:
         cliente.append(saldoInicio)
@@ -141,10 +156,10 @@ def cadastro(): #Função de Cadastro de Conta
             print("SUA SENHA NÃO TEM 6 CARACTERES, POR FAVOR DIGITE NOVAMENTE")
             senha = input("SENHA: ")
             if len(senha) == 6:
-                cadastrado = verificaSenha(senha)
+                cadastrado = verificaSenha(senha, cliente)
                 return cliente, cadastrado #retorna o valor da função cadastrado que se for True vai liberar as outras opções do menu
     else:
-        cadastrado = verificaSenha(senha)
+        cadastrado = verificaSenha(senha, cliente)
         return cliente, cadastrado
 
 
@@ -157,6 +172,10 @@ def deposito(lista,extrato): #Função de Depósito
 
     print(f"NOME DO CLIENTE: {lista[1]}")
     deposito = float(input("VALOR DO DEPÓSITO: "))
+    while deposito <= 0:
+        print("VALOR DE DEPÓSITO INVÁLIDO Digite novamente")
+        deposito = float(input("VALOR DO DEPÓSITO: "))
+
     lista[4] = lista[4] + deposito #no indice 4 da lista será somado ao valor atual o valor do depósito
     saldoAtual = lista[4]
     limiteAtual = lista[5]
@@ -172,7 +191,7 @@ def saque(lista,extrato):
     if bloqueado == False:
 
         saque = float(input("VALOR DE SAQUE: "))
-        while saque < 0:
+        while saque <= 0:
             print("VALOR INVÁLIDO PARA SAQUE DIGITE NOVAMENTE")
             saque = float(input("VALOR DO SAQUE "))
         saldoAtual = lista[4]
@@ -296,3 +315,4 @@ def verifica(lista): #Função de verificação de segurança usada em todos as 
 menu()
 print("\n\nObrigado por utilizar nosso sistema :) ")
 print("Projeto Desenvolvido por Ruan Lima Silva - 32385633")
+exit()
