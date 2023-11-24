@@ -1,6 +1,4 @@
-Python 3.7.2 (tags/v3.7.2:9a3ffc0492, Dec 23 2018, 23:09:28) [MSC v.1916 64 bit (AMD64)] on win32
-Type "help", "copyright", "credits" or "license()" for more information.
->>> import random
+import random
 import re
 
 def menu(): # Função Menu e todas as variáveis que serão usadas
@@ -118,7 +116,7 @@ def cadastro(): #Função de Cadastro de Conta
     email = input("EMAIL: ")
     testeArroba = email.find("@")
 
-    
+
     if email != '' and testeArroba > 3:
         cliente.append(email)
     else:
@@ -270,7 +268,7 @@ def calculadora(): #Função calculadora de investimentos
     tempo = int(input("Tempo em Anos: ")) #Quantos anos você quer deixar investindo?
     tempo = tempo * 12 #conversão do tempo de anos para meses
     atual = float(input("Aporte Inicial: ")) #Quanto de aporte inicial você vai dar?
-    
+
     while tempo < 1:
         print("OBRIGATORIAMENTE O INVESTIMENTO DEVE SER MAIOR OU IGUAL A 1 ANO")
         tempo = int(input("Tempo em Anos: "))
